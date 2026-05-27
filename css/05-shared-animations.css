@@ -1,0 +1,101 @@
+
+
+@keyframes scrollDot {
+  0% {
+    transform: translateX(-50%) translateY(0);
+    opacity: 0.8;
+  }
+  70% {
+    transform: translateX(-50%) translateY(18px);
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateX(-50%) translateY(0);
+    opacity: 0.8;
+  }
+}
+
+@keyframes titleShimmer {
+  0%,
+  100% {
+    text-shadow:
+      0 0 20px rgba(255, 170, 0, 0.5),
+      0 0 8px rgba(255, 242, 204, 0.4);
+    filter: brightness(1) drop-shadow(0 0 0 transparent);
+  }
+  50% {
+    text-shadow:
+      0 0 35px rgba(255, 215, 0, 0.95),
+      0 0 18px rgba(255, 242, 204, 0.85);
+    filter: brightness(1.2) drop-shadow(0 0 10px rgba(255, 215, 0, 0.6));
+  }
+}
+
+@keyframes panelGlow {
+  0%,
+  100% {
+    box-shadow:
+      0 14px 60px rgba(0, 0, 0, 0.85),
+      0 0 100px rgba(183, 110, 121, 0.1),
+      0 0 50px rgba(30, 12, 50, 0.5),
+      inset 0 1px 0 rgba(255, 242, 204, 0.15),
+      inset 0 -1px 0 rgba(183, 110, 121, 0.1);
+    border-color: rgba(255, 242, 204, 0.18);
+  }
+  50% {
+    box-shadow:
+      0 14px 60px rgba(0, 0, 0, 0.85),
+      0 0 120px rgba(183, 110, 121, 0.22),
+      0 0 70px rgba(212, 175, 55, 0.14),
+      inset 0 1px 0 rgba(255, 242, 204, 0.3),
+      inset 0 -1px 0 rgba(183, 110, 121, 0.2);
+    border-color: rgba(255, 242, 204, 0.32);
+  }
+}
+
+@keyframes letterSectionIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes candleFlicker {
+  0%,
+  100% {
+    opacity: 0.7;
+    background: radial-gradient(
+      ellipse 60% 50% at 30% 20%,
+      rgba(255, 200, 100, 0.12),
+      transparent 70%
+    );
+  }
+  25% {
+    opacity: 0.9;
+    background: radial-gradient(
+      ellipse 65% 55% at 32% 18%,
+      rgba(255, 190, 80, 0.16),
+      transparent 70%
+    );
+  }
+  50% {
+    opacity: 0.55;
+    background: radial-gradient(
+      ellipse 55% 45% at 28% 22%,
+      rgba(255, 210, 110, 0.1),
+      transparent 70%
+    );
+  }
+  75% {
+    opacity: 0.85;
+    background: radial-gradient(
+      ellipse 62% 52% at 34% 19%,
+      rgba(255, 195, 90, 0.14),
+      transparent 70%
+    );
+  }
+}

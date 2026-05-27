@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <link rel="icon" type="image/png" href="" id="favicon-link" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:ital@1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css?v=5" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <audio id="bgm" data-config-src="audio.bgmSrc" loop></audio>
+    <div id="intro-overlay">
+      <h1 id="intro-instruction" data-config="intro.instruction"></h1>
+      <div id="countdown">3</div>
+      <p id="candle-prompt" data-config="intro.candlePrompt"></p>
+      <div class="candle-container" id="candle-wrapper">
+        <div class="candle">
+          <div class="flame"></div>
+          <div class="wick"></div>
+          <div class="wax"></div>
+        </div>
+      </div>
+      <button id="blow-candle-btn" aria-label="Blow the candle" data-config="intro.blowButtonText"></button>
+      <h1 id="happy-birthday-text" data-config="intro.birthdayText"></h1>
+    </div>
+    <div id="scroll-wrapper">
+      <div class="scroll-spacer">
+        <div class="scroll-indicator" aria-hidden="true">
+          <span></span>
+        </div>
+      </div>
+      <!-- Section 1: The Gift -->
+      <section class="gift-section" id="section-gift">
+        <div class="gift-title-container">
+          <h2 class="gift-title" data-config="gift.title"></h2>
+          <div class="gift-title-stars">
+            <span>✦</span><span>✧</span><span>✦</span>
+          </div>
+        </div>
+        <div class="gift-content">
+          <div class="gift-box-wrapper premium-gift-stage">
+            <div class="magical-aura"></div>
+            <div class="celestial-ring" aria-hidden="true"></div>
+            <div class="orbit-elements">
+              <div class="orbit-elem oe1" aria-hidden="true">💖</div>
+              <div class="orbit-elem oe2" aria-hidden="true">✨</div>
+              <div class="orbit-elem oe3" aria-hidden="true">🌟</div>
+              <div class="orbit-elem oe4" aria-hidden="true">💘</div>
+              <div class="orbit-elem oe5" aria-hidden="true">💫</div>
+            </div>
+            <div
+              class="gift-box"
+              role="button"
+              tabindex="0"
+              aria-pressed="false"
+              aria-label="Open gift message"
+            >
+              <div class="gift-light-beam"></div>
+              <div class="gift-sparkles">
+                <svg class="sparkle s1" viewBox="0 0 24 24">
+                  <path
+                    d="M12 0L14.5 8.5L24 12L14.5 15.5L12 24L9.5 15.5L0 12L9.5 8.5Z"
+                    fill="#ffb703"
+                  />
+                </svg>
+                <svg class="sparkle s2" viewBox="0 0 24 24">
+                  <path
+                    d="M12 0L14.5 8.5L24 12L14.5 15.5L12 24L9.5 15.5L0 12L9.5 8.5Z"
+                    fill="#d946ef"
+                  />
+                </svg>
+                <svg class="sparkle s3" viewBox="0 0 24 24">
+                  <path
+                    d="M12 0L14.5 8.5L24 12L14.5 15.5L12 24L9.5 15.5L0 12L9.5 8.5Z"
+                    fill="#00e5ff"
+                  />
+                </svg>
+              </div>
+              <img
+                data-config-src="gift.boxImageSrc"
+                alt="Gift Box"
+                class="gift-box-image"
+              />
+            </div>
+            <p class="gift-hint" data-config="gift.hint"></p>
+            <div class="heart-burst" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+          <div class="gift-message" aria-hidden="true" data-config="gift.message"></div>
+        </div>
+      </section>
+      <!-- Section 2: Love Letter-->
+      <section class="letter-section" id="section-letter">
+        <div class="letter-stardust" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><span></span
+          ><span></span><span></span><span></span>
+        </div>
+        <div class="letter-inner" id="letter-tilt-container">
+          <h2 class="letter-title">
+            <svg
+              class="title-icon"
+              viewBox="0 0 24 24"
+              width="32"
+              height="32"
+              stroke="currentColor"
+              stroke-width="1.5"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+              ></path>
+            </svg>
+            <span data-config="letter.title">A Love Letter</span>
+          </h2>
+          <button
+            id="wax-seal-btn"
+            class="wax-seal-btn"
+            aria-label="Open Letter"
+          >
+            <div class="seal-ring">
+              <svg viewBox="0 0 100 100">
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  fill="#8b0000"
+                  stroke="#b22222"
+                  stroke-width="4"
+                />
+                <text
+                  x="50"
+                  y="62"
+                  font-family="'Great Vibes', cursive"
+                  font-size="45"
+                  fill="#d4af37"
+                  text-anchor="middle"
+                  data-config="letter.sealLetter"
+                ></text>
+              </svg>
+            </div>
+            <span class="seal-text" data-config="letter.sealText">Click to Open</span>
+          </button>
+          <div class="letter-card locked" id="letter-card">
+            <div class="card-border-glow"></div>
+            <div class="candlelight" aria-hidden="true"></div>
+            <svg class="ornament top-left" viewBox="0 0 50 50">
+              <path
+                d="M0,0 L20,0 A30,30 0 0,1 50,30 L50,50 L20,50 A30,30 0 0,1 0,20 Z"
+                fill="rgba(212,175,55,0.1)"
+              />
+              <path
+                d="M5,5 L15,5 A30,30 0 0,1 45,35 L45,45 L15,45 A30,30 0 0,1 5,15 Z"
+                fill="none"
+                stroke="rgba(212,175,55,0.4)"
+                stroke-width="1"
+              />
+            </svg>
+            <div class="letter-content" id="letter-content-wrapper"></div>
+          </div>
+        </div>
+      </section>
+      <!-- Section 3: Countdown Timer -->
+      <section class="countdown-section" id="section-countdown">
+        <svg width="0" height="0" style="position: absolute">
+          <defs>
+            <linearGradient
+              id="countdown-gradient"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="100%"
+            >
+              <stop offset="0%" stop-color="#d4af37" />
+              <stop offset="50%" stop-color="#f0d68a" />
+              <stop offset="100%" stop-color="#b76e79" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="countdown-inner">
+          <h2 class="countdown-title" data-config="countdown.title"></h2>
+          <p class="countdown-subtitle" data-config="countdown.subtitle"></p>
+          <div class="countdown-grid">
+            <div class="countdown-card" data-unit="years" data-max="100">
+              <div class="card-orbital">
+                <span></span>
+              </div>
+              <div class="progress-ring-wrap">
+                <svg class="progress-ring" viewBox="0 0 120 120">
+                  <circle class="progress-ring__bg" cx="60" cy="60" r="54" />
+                  <circle class="progress-ring__fill" cx="60" cy="60" r="54" />
+                </svg>
+                <div class="countdown-value-wrap">
+                  <span class="countdown-value" id="cd-years">0</span>
+                </div>
+              </div>
+              <span class="countdown-label" data-config="countdown.labels.years"></span>
+            </div>
+            <div class="countdown-card" data-unit="months" data-max="12">
+              <div class="card-orbital">
+                <span></span>
+              </div>
+              <div class="progress-ring-wrap">
+                <svg class="progress-ring" viewBox="0 0 120 120">
+                  <circle class="progress-ring__bg" cx="60" cy="60" r="54" />
+                  <circle class="progress-ring__fill" cx="60" cy="60" r="54" />
+                </svg>
+                <div class="countdown-value-wrap">
+                  <span class="countdown-value" id="cd-months">0</span>
+                </div>
+              </div>
+              <span class="countdown-label" data-config="countdown.labels.months"></span>
+            </div>
+            <div class="countdown-card" data-unit="days" data-max="31">
+              <div class="card-orbital">
+                <span></span>
+              </div>
+              <div class="progress-ring-wrap">
+                <svg class="progress-ring" viewBox="0 0 120 120">
+                  <circle class="progress-ring__bg" cx="60" cy="60" r="54" />
+                  <circle class="progress-ring__fill" cx="60" cy="60" r="54" />
+                </svg>
+                <div class="countdown-value-wrap">
+                  <span class="countdown-value" id="cd-days">0</span>
+                </div>
+              </div>
+              <span class="countdown-label" data-config="countdown.labels.days"></span>
+            </div>
+            <div class="countdown-card" data-unit="hours" data-max="24">
+              <div class="card-orbital">
+                <span></span>
+              </div>
+              <div class="progress-ring-wrap">
+                <svg class="progress-ring" viewBox="0 0 120 120">
+                  <circle class="progress-ring__bg" cx="60" cy="60" r="54" />
+                  <circle class="progress-ring__fill" cx="60" cy="60" r="54" />
+                </svg>
+                <div class="countdown-value-wrap">
+                  <span class="countdown-value" id="cd-hours">0</span>
+                </div>
+              </div>
+              <span class="countdown-label" data-config="countdown.labels.hours"></span>
+            </div>
+            <div class="countdown-card" data-unit="minutes" data-max="60">
+              <div class="card-orbital">
+                <span></span>
+              </div>
+              <div class="progress-ring-wrap">
+                <svg class="progress-ring" viewBox="0 0 120 120">
+                  <circle class="progress-ring__bg" cx="60" cy="60" r="54" />
+                  <circle class="progress-ring__fill" cx="60" cy="60" r="54" />
+                </svg>
+                <div class="countdown-value-wrap">
+                  <span class="countdown-value" id="cd-minutes">0</span>
+                </div>
+              </div>
+              <span class="countdown-label" data-config="countdown.labels.minutes"></span>
+            </div>
+            <div class="countdown-card" data-unit="seconds" data-max="60">
+              <div class="card-orbital">
+                <span></span>
+              </div>
+              <div class="progress-ring-wrap">
+                <svg class="progress-ring" viewBox="0 0 120 120">
+                  <circle class="progress-ring__bg" cx="60" cy="60" r="54" />
+                  <circle class="progress-ring__fill" cx="60" cy="60" r="54" />
+                </svg>
+                <div class="countdown-value-wrap">
+                  <span class="countdown-value" id="cd-seconds">0</span>
+                </div>
+              </div>
+              <span class="countdown-label" data-config="countdown.labels.seconds"></span>
+            </div>
+          </div>
+          <div
+            class="countdown-particles"
+            id="countdown-particles"
+            aria-hidden="true"
+          ></div>
+        </div>
+        <div class="story-footer" aria-hidden="true">
+          <div class="story-footer-stars">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <p class="story-footer-text" data-config="countdown.footerText"></p>
+        </div>
+      </section>
+      <!-- Section 4: Our Story-->
+      <section class="story-section" id="section-story">
+        <div class="story-nebula" aria-hidden="true">
+          <div class="story-nebula-node snn-1"></div>
+          <div class="story-nebula-node snn-2"></div>
+          <div class="story-nebula-node snn-3"></div>
+          <div class="story-nebula-node snn-4"></div>
+        </div>
+        <div class="story-inner">
+          <div class="story-header">
+            <div class="story-constellation" aria-hidden="true">
+              <span class="sc-star sc-s1"></span>
+              <span class="sc-star sc-s2"></span>
+              <span class="sc-star sc-s3"></span>
+              <span class="sc-star sc-s4"></span>
+              <span class="sc-star sc-s5"></span>
+              <svg
+                class="sc-lines"
+                viewBox="0 0 260 40"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <polyline
+                  class="sc-polyline"
+                  points="13,20 65,5 130,24 195,6 247,20"
+                />
+              </svg>
+            </div>
+            <h2 class="story-title" data-config="story.title"></h2>
+            <p class="story-subtitle" data-config="story.subtitle"></p>
+          </div>
+
+          <div class="story-timeline" id="story-timeline">
+            <div class="story-tl-line" aria-hidden="true">
+              <div class="story-tl-line-fill" id="story-line-fill"></div>
+              <div class="story-tl-line-comet" id="story-line-comet"></div>
+            </div>
+
+          </div>
+
+          <div class="story-footer" aria-hidden="true">
+            <div class="story-footer-stars">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <p class="story-footer-text" data-config="story.footerText"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 5: Our Gallery -->
+      <section class="gallery-section" id="section-gallery">
+        <div class="gallery-ambient" aria-hidden="true">
+          <span class="gallery-ambient-orb ga-orb-1"></span>
+          <span class="gallery-ambient-orb ga-orb-2"></span>
+          <span class="gallery-ambient-orb ga-orb-3"></span>
+          <span class="gallery-ambient-orb ga-orb-4"></span>
+        </div>
+        <div class="gallery-header">
+          <h2 class="gallery-title">
+            <span data-config="gallery.title">Star Gallery</span>
+
+            <svg
+              class="gallery-icon"
+              viewBox="0 0 24 24"
+              width="32"
+              height="32"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"
+              ></path>
+              <circle cx="12" cy="13" r="4"></circle>
+            </svg>
+          </h2>
+          <p class="gallery-subtitle" data-config="gallery.subtitle"></p>
+        </div>
+        <div class="gallery-inner">
+          <div
+            class="gallery-grid"
+            id="gallery-grid"
+            role="list"
+            aria-label="Our photo gallery"
+          ></div>
+        </div>
+      </section>
+      <div class="gallery-lightbox" id="gallery-lightbox" aria-hidden="true">
+        <div class="gallery-lightbox-backdrop" id="gallery-lb-backdrop"></div>
+        <div
+          class="gallery-lightbox-panel"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Photo viewer"
+          tabindex="-1"
+        >
+          <figure class="gallery-lb-figure">
+            <img src="" alt="" class="gallery-lb-image" id="gallery-lb-image" />
+            <figcaption class="gallery-lb-caption">
+              <h3 class="gallery-lb-title" id="gallery-lb-title"></h3>
+              <p class="gallery-lb-text" id="gallery-lb-text"></p>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <section class="wish-section" id="section-wish">
+        <div
+          id="wish-star-burst"
+          class="wish-star-burst"
+          aria-hidden="true"
+        ></div>
+
+        <div class="wish-cosmic-bg" aria-hidden="true">
+          <div class="floating-star fs-1">✨</div>
+          <div class="floating-heart fh-1">💖</div>
+          <div class="floating-star fs-2">🌟</div>
+          <div class="floating-heart fh-2">💕</div>
+          <div class="floating-star fs-3">✨</div>
+          <div class="floating-heart fh-3">💗</div>
+        </div>
+
+        <div class="wish-header">
+          <h2 class="wish-title">
+            <span data-config="wish.title">Whisper to the Universe</span>
+            <svg
+              class="wish-icon"
+              viewBox="0 0 24 24"
+              width="36"
+              height="36"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+              ></polygon>
+            </svg>
+          </h2>
+          <p class="wish-subtitle" data-config="wish.subtitle"></p>
+        </div>
+
+        <div class="wish-container premium-glass">
+          <div class="border-trace"></div>
+
+          <div class="wish-stardust"></div>
+          <div class="wish-input-wrapper" id="wish-input-wrapper">
+            <div class="textarea-container">
+              <textarea
+                id="wish-input"
+                data-config-placeholder="wish.placeholder"
+              ></textarea>
+              <div class="textarea-glow"></div>
+            </div>
+
+            <button id="wish-btn" class="cosmic-btn" aria-label="Send wish">
+              <span class="btn-text" data-config="wish.buttonText">Send to the Stars ✨</span>
+              <span class="btn-sparks"></span>
+              <div class="btn-glow-layer"></div>
+            </button>
+          </div>
+        </div>
+
+        <div class="finale-section" id="section-finale">
+          <div class="finale-content">
+            <p class="finale-text line-1" data-config="finale.line1"></p>
+            <p class="finale-text line-2" data-config="finale.line2"></p>
+            <p class="finale-text line-3" data-config="finale.line3"></p>
+            <h1 class="finale-title" data-config="finale.title"></h1>
+            <div class="story-footer" aria-hidden="true">
+              <div class="story-footer-stars">
+                <span></span><span></span><span></span><span></span
+                ><span></span>
+              </div>
+              <p class="story-footer-text" data-config="finale.footerText"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <canvas id="webgl-canvas"></canvas>
+    <script type="module" src="main.js?v=5"></script>
+  </body>
+</html>

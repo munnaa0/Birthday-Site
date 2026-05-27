@@ -1,0 +1,344 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
+  --font-display: "Great Vibes", cursive;
+  --rose: #b76e79;
+  --pink: #ffd1dc;
+  --gold: #d4af37;
+  --ivory: #fffdf8;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden; 
+  background-color: #030308; 
+  font-family: sans-serif;
+}
+
+#webgl-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+
+#intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 1.5s ease-in-out;
+  color: #fff;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+#intro-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, #2a1f1f 0%, #030308 60%);
+  z-index: -1;
+  transition: opacity 2s ease-in-out;
+}
+
+#intro-overlay.fade-bg::before {
+  opacity: 0;
+}
+
+#intro-overlay.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#intro-instruction {
+  position: absolute;
+  top: 5%;
+  font-size: 3rem;
+  margin-bottom: 1;
+  max-height: 200px;
+  overflow: hidden;
+  transition:
+    opacity 0.5s ease,
+    max-height 0.5s ease,
+    margin 0.5s ease;
+}
+
+#countdown {
+  position: absolute;
+  top: calc(10% + 5rem);
+  font-size: 4rem;
+  font-weight: bold;
+  margin-bottom: 0;
+  max-height: 200px;
+  overflow: hidden;
+  transition:
+    opacity 0.5s ease,
+    max-height 0.5s ease,
+    margin 0.5s ease;
+}
+
+
+.candle-container {
+  position: relative;
+  width: 60px;
+  height: 200px;
+  margin-bottom: 40px;
+  transition: opacity 0.5s ease;
+  filter: drop-shadow(0 0 50px rgba(255, 165, 0, 0.6));
+}
+
+.candle-container.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.wax {
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  width: 40px;
+  height: 150px;
+  background: repeating-linear-gradient(
+    -45deg,
+    #ff99cc,
+    #ff99cc 10px,
+    #ffffff 10px,
+    #ffffff 20px
+  ); 
+  border: 2px solid #000;
+  border-radius: 5px;
+}
+
+.wick {
+  position: absolute;
+  bottom: 150px;
+  left: 28px;
+  width: 4px;
+  height: 15px;
+  background-color: #333;
+}
+
+.flame {
+  position: absolute;
+  bottom: 165px;
+  left: 20px;
+  width: 20px;
+  height: 35px;
+  background: #ffcc00;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  box-shadow:
+    0 0 20px #ff9900,
+    0 0 40px #ff5500;
+  animation: flicker 0.1s infinite alternate;
+  transform-origin: bottom center;
+}
+
+@keyframes flicker {
+  0% {
+    transform: scale(1) rotate(-2deg);
+    box-shadow:
+      0 0 20px #ff9900,
+      0 0 40px #ff5500;
+  }
+  100% {
+    transform: scale(1.1) rotate(2deg);
+    box-shadow:
+      0 0 25px #ffaa00,
+      0 0 50px #ff6600;
+  }
+}
+
+#candle-prompt {
+  font-size: 2.2rem;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  font-weight: bold;
+  color: #ff4d94;
+  text-shadow:
+    0 0 8px #ff99cc,
+    0 0 20px #ff4d94;
+  margin-bottom: 24px;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease;
+  animation: none;
+  letter-spacing: 3px;
+}
+
+#candle-prompt.visible {
+  opacity: 1;
+  transform: translateY(0);
+  animation: shimmer-text 2s ease-in-out infinite alternate;
+}
+
+@keyframes shimmer-text {
+  0% {
+    text-shadow:
+      0 0 8px #ff99cc,
+      0 0 20px #ff4d94;
+    color: #ff4d94;
+  }
+  50% {
+    text-shadow:
+      0 0 16px #ffb347,
+      0 0 35px #ff6600;
+    color: #ff9933;
+  }
+  100% {
+    text-shadow:
+      0 0 8px #ff99cc,
+      0 0 20px #ff4d94;
+    color: #ff4d94;
+  }
+}
+
+#blow-candle-btn {
+  display: none;
+  margin-bottom: 30px;
+  padding: 16px 40px;
+  font-size: 1.6rem;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(135deg, #ff6b9d, #ff4757);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow:
+    0 0 15px #ff6b9d,
+    0 0 30px #ff475755;
+  animation: pulse-btn 1.2s ease-in-out infinite;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+#blow-candle-btn:hover {
+  transform: scale(1.07);
+  box-shadow:
+    0 0 25px #ff6b9d,
+    0 0 50px #ff4757;
+}
+
+#blow-candle-btn:active {
+  transform: scale(0.96);
+}
+
+#blow-candle-btn.visible {
+  display: inline-block;
+}
+
+@keyframes pulse-btn {
+  0%,
+  100% {
+    box-shadow:
+      0 0 15px #ff6b9d,
+      0 0 30px #ff475755;
+  }
+  50% {
+    box-shadow:
+      0 0 30px #ff6b9d,
+      0 0 60px #ff4757aa;
+  }
+}
+
+#happy-birthday-text {
+  position: absolute;
+  font-family: "Great Vibes", cursive;
+  font-size: 4.5rem;
+  line-height: 1.2;
+  color: #fff2cc; 
+  text-shadow:
+    0 0 10px #ffaa00,
+    0 0 20px #ffaa00,
+    0 0 40px #ff5500;
+  opacity: 0;
+  transform: scale(0.8);
+  letter-spacing: 0px;
+  text-align: center;
+  pointer-events: none;
+  max-width: 94vw;
+  text-wrap: balance;
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+
+#happy-birthday-text.show {
+  animation: glow-expand 4s ease-out forwards;
+}
+
+@keyframes glow-expand {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+    letter-spacing: 0px;
+    text-shadow:
+      0 0 5px #ffaa00,
+      0 0 10px #ffaa00;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    letter-spacing: var(--hb-final-letter-spacing, 5px);
+    text-shadow:
+      0 0 15px #ffaa00,
+      0 0 30px #ffaa00,
+      0 0 50px #ff5500;
+  }
+}
+
+@media (max-width: 767px) {
+  #happy-birthday-text {
+    font-size: clamp(2.3rem, 11.5vw, 3.8rem);
+    line-height: 1.12;
+    --hb-final-letter-spacing: 1px;
+    padding: 0 10px;
+  }
+}
+
+@media (max-width: 430px) {
+  #happy-birthday-text {
+    font-size: clamp(2rem, 11vw, 3.1rem);
+    line-height: 1.1;
+    --hb-final-letter-spacing: 0.4px;
+  }
+
+  #happy-birthday-text .hb-mobile-line {
+    display: inline-block;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 768px) {
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+    min-height: 100dvh;
+  }
+
+  #webgl-canvas {
+    width: 100%;
+    height: 100dvh;
+  }
+}

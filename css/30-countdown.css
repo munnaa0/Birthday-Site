@@ -1,0 +1,370 @@
+
+
+.countdown-section {
+  min-height: 100vh;
+  width: 100%;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+.countdown-section.revealed {
+  display: flex;
+  animation: letterSectionIn 1.4s ease-out both;
+}
+
+.countdown-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(1100px, 92vw);
+  position: relative;
+  z-index: 2;
+}
+
+
+
+.countdown-title {
+  font-family: var(--font-display, "Great Vibes", cursive);
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  color: #d4af37;
+  margin: 0 0 0.4rem 0;
+  text-align: center;
+  position: relative;
+  background: linear-gradient(
+    90deg,
+    #d4af37 0%,
+    #fff2cc 20%,
+    #d4af37 40%,
+    #d4af37 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: titlePulseWave 4s ease-in-out infinite;
+  text-shadow: none;
+  filter: drop-shadow(0 4px 20px rgba(212, 175, 55, 0.35));
+}
+
+@keyframes titlePulseWave {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.countdown-subtitle {
+  font-family: "Lora", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(0.9rem, 1.8vw, 1.15rem);
+  color: rgba(255, 209, 220, 0.7);
+  margin: 0 0 2.4rem 0;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+
+
+.countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1.2rem;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .countdown-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .countdown-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+  }
+}
+
+
+
+.countdown-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(
+    145deg,
+    rgba(20, 8, 40, 0.65) 0%,
+    rgba(40, 12, 65, 0.6) 55%,
+    rgba(20, 8, 40, 0.63) 100%
+  );
+  backdrop-filter: blur(12px) saturate(130%) brightness(1.05);
+  -webkit-backdrop-filter: blur(12px) saturate(130%) brightness(1.05);
+  border: 1px solid rgba(255, 242, 204, 0.14);
+  border-radius: 20px;
+  padding: 1.2rem 0.6rem 1rem;
+  box-shadow:
+    0 14px 40px rgba(0, 0, 0, 0.6),
+    0 0 60px rgba(183, 110, 121, 0.08),
+    inset 0 1px 0 rgba(255, 242, 204, 0.12),
+    inset 0 -1px 0 rgba(183, 110, 121, 0.08);
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+  will-change: transform;
+}
+
+/* Solid fallback for browsers with broken backdrop-filter + 3D interaction */
+@supports not (backdrop-filter: blur(1px)) {
+  .countdown-card {
+    background: linear-gradient(
+      145deg,
+      rgba(20, 8, 40, 0.82) 0%,
+      rgba(40, 12, 65, 0.78) 55%,
+      rgba(20, 8, 40, 0.8) 100%
+    );
+  }
+}
+
+.countdown-card:hover {
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.7),
+    0 0 80px rgba(212, 175, 55, 0.12),
+    inset 0 1px 0 rgba(255, 242, 204, 0.2),
+    inset 0 -1px 0 rgba(183, 110, 121, 0.12);
+}
+
+
+
+.card-orbital {
+  position: absolute;
+  inset: -8px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.card-orbital span {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(212, 175, 55, 0.9),
+    rgba(212, 175, 55, 0.2)
+  );
+  box-shadow: 0 0 6px rgba(212, 175, 55, 0.6);
+  top: 50%;
+  left: 50%;
+  animation: orbitalSpin 6s linear infinite;
+}
+
+.countdown-card:nth-child(1) .card-orbital span {
+  animation-duration: 5s;
+}
+.countdown-card:nth-child(2) .card-orbital span {
+  animation-duration: 6.5s;
+  animation-direction: reverse;
+}
+.countdown-card:nth-child(3) .card-orbital span {
+  animation-duration: 7s;
+}
+.countdown-card:nth-child(4) .card-orbital span {
+  animation-duration: 5.5s;
+  animation-direction: reverse;
+}
+.countdown-card:nth-child(5) .card-orbital span {
+  animation-duration: 8s;
+}
+.countdown-card:nth-child(6) .card-orbital span {
+  animation-duration: 4.5s;
+  animation-direction: reverse;
+}
+
+@keyframes orbitalSpin {
+  0% {
+    transform: rotate(0deg) translateX(calc(50% + 52px)) rotate(0deg);
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: rotate(360deg) translateX(calc(50% + 52px)) rotate(-360deg);
+    opacity: 0.9;
+  }
+}
+
+
+
+.progress-ring-wrap {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+@media (min-width: 901px) {
+  .progress-ring-wrap {
+    width: 110px;
+    height: 110px;
+  }
+}
+
+.progress-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.progress-ring__bg {
+  fill: none;
+  stroke: rgba(255, 242, 204, 0.06);
+  stroke-width: 3;
+}
+
+.progress-ring__fill {
+  fill: none;
+  stroke: url(#countdown-gradient);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-dasharray: 339.292;
+  stroke-dashoffset: 339.292;
+  transition: stroke-dashoffset 0.6s ease;
+  filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.5));
+}
+
+
+.progress-ring__fill {
+  stroke: url(#countdown-gradient);
+}
+
+.countdown-value-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+
+
+.countdown-value {
+  font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+  font-weight: 700;
+  color: #fff2cc;
+  display: block;
+  text-shadow:
+    0 0 15px rgba(255, 170, 0, 0.6),
+    0 0 30px rgba(212, 175, 55, 0.3);
+  transition: color 0.3s ease;
+}
+
+.countdown-value.tick {
+  animation: digitRoll 0.45s ease-out;
+}
+
+@keyframes digitRoll {
+  0% {
+    transform: translateY(-30%) scale(0.85);
+    opacity: 0.3;
+    filter: blur(2px);
+  }
+  60% {
+    transform: translateY(4%) scale(1.05);
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+.countdown-label {
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255, 209, 220, 0.65);
+  margin-top: 0.5rem;
+  z-index: 1;
+}
+
+
+
+.countdown-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.cd-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: cdParticleBurst 1.4s ease-out forwards;
+}
+
+@keyframes cdParticleBurst {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0);
+  }
+}
+
+
+
+.countdown-card.tilt-active {
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.35s ease;
+}
+
+
+
+.countdown-card[data-unit="seconds"].pulse {
+  animation: cardSecondPulse 0.6s ease-out;
+}
+
+@keyframes cardSecondPulse {
+  0% {
+    box-shadow:
+      0 14px 40px rgba(0, 0, 0, 0.6),
+      0 0 60px rgba(183, 110, 121, 0.08),
+      0 0 20px rgba(212, 175, 55, 0.35),
+      inset 0 1px 0 rgba(255, 242, 204, 0.12);
+    border-color: rgba(212, 175, 55, 0.5);
+  }
+  100% {
+    box-shadow:
+      0 14px 40px rgba(0, 0, 0, 0.6),
+      0 0 60px rgba(183, 110, 121, 0.08),
+      inset 0 1px 0 rgba(255, 242, 204, 0.12);
+    border-color: rgba(255, 242, 204, 0.14);
+  }
+}
+
