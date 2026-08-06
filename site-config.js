@@ -25,16 +25,6 @@ export const siteConfig = {
     birthdayText: "Happy Birthday Tangerine!", // big heading after blow
   },
 
-  // ── Gift ──────────────────────────────────
-  gift: {
-    title: "A Gift for My Cutie", // section heading
-    boxImageSrc:
-      "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzFsaWNsNjR5c21wbWJuZnZzdGR5N2w4ZDBnazFlZWtiZGh2OTRpaCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/At48Y4dT3oDXx64KQj/giphy.gif",
-    hint: "Tap to open ✨", // hint below gift box
-    message:
-      "Happy Birthday, Sweetie!💖 Today, the world celebrates you - but for me, every single day with you is a celebration.",
-  },
-
   // ── Letter ────────────────────────────────
   letter: {
     title: "A Love Letter", // section heading
@@ -52,22 +42,6 @@ export const siteConfig = {
     ],
     signoff: "Forever yours,", // sign-off line
     signoffName: "Your stargazer", // sign-off name
-  },
-
-  // ── Countdown ─────────────────────────────
-  countdown: {
-    title: "And I'd choose you in every lifetime", // section heading
-    subtitle: "Time drifts so softly when love is the clock.", // sub text
-    startDate: "2018-01-24T00:00:00", // ISO date for time-since calc
-    labels: {
-      years: "Years",
-      months: "Months",
-      days: "Days",
-      hours: "Hours",
-      minutes: "Minutes",
-      seconds: "Seconds",
-    },
-    footerText: "Many more years wait for us.",
   },
 
   // ── Story ─────────────────────────────────
@@ -159,63 +133,6 @@ export const siteConfig = {
         glitchText:
           "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam incidunt eius dolore ad neque, officiis sint fugit laudantium mollitia dicta architecto soluta similique voluptatem aliquam repudiandae alias ullam minus numquam.",
         nodeEmoji: "💖",
-      },
-    ],
-  },
-
-  // ── Gallery ───────────────────────────────
-  gallery: {
-    title: "Star Gallery", // section heading
-    subtitle:
-      "I wanted to fill this with our photos, but even the few we have feel priceless.",
-    items: [
-      {
-        src: "images/pic1.jpg",
-        title: "Little Days",
-        text: "A small snapshot that feels huge to me. It holds a quiet kind of joy I never want to forget.",
-        r: -8,
-        x: -15,
-        y: -10,
-      },
-      {
-        src: "images/pic2.jpg",
-        title: "Favorite Frame",
-        text: "I kept coming back to this one. Your glow makes the whole moment feel softer and brighter.",
-        r: 6,
-        x: 10,
-        y: 15,
-      },
-      {
-        src: "images/pic3.jpg",
-        title: "Brightest Smile",
-        text: "Your smile turns any room into home. I could look at it forever and still want another second.",
-        r: -4,
-        x: 5,
-        y: 30,
-      },
-      {
-        src: "images/pic4.jpg",
-        title: "Teacher Vibes",
-        text: "You look so confident here, like you could teach the stars how to shine.",
-        r: 7,
-        x: -10,
-        y: 10,
-      },
-      {
-        src: "images/pic5.jpg",
-        title: "Cosmic Mood",
-        text: "This one feels like a mood board for us: calm, dreamy, and a little magical.",
-        r: -12,
-        x: 20,
-        y: -5,
-      },
-      {
-        src: "images/pic6.jpg",
-        title: "For You",
-        text: "Every detail here was shaped with you in mind, a tiny gift wrapped in pixels.",
-        r: 5,
-        x: 0,
-        y: -20,
       },
     ],
   },
