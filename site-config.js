@@ -8,7 +8,7 @@ export const siteConfig = {
   // ── Meta ──────────────────────────────────
   meta: {
     title: "Happy Birthday Cutie", // browser tab title
-    favicon: "images/icon.png", // favicon image path
+    favicon: "images/icon.jpg", // favicon image path
   },
 
   // ── Audio ─────────────────────────────────

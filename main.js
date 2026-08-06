@@ -396,13 +396,15 @@ window.onload = () => {
     : "";
   let introCountdownStarted = false;
   const BGM_BASE_VOLUME = siteConfig.audio.bgmVolume ?? 0.5;
+  const BGM_PLAY_TIMEOUT_MS = 2500;
   let bgmVolumeTweenFrame = 0;
   let bgmRetryArmed = false;
+  let bgmShouldPlay = false;
+  let bgmPlayPromise = null;
+  let bgmDelayedRetryId = 0;
 
   if (bgm) {
     bgm.preload = "auto";
-    // Preload early so playback can start immediately on candle click.
-    bgm.load();
     bgm.loop = true;
     bgm.muted = false;
     bgm.volume = BGM_BASE_VOLUME;
@@ -451,7 +453,7 @@ window.onload = () => {
   }
 
   function armBgmRetryOnNextInteraction() {
-    if (bgmRetryArmed) return;
+    if (!bgm || bgmRetryArmed) return;
     bgmRetryArmed = true;
 
     const retry = () => {
@@ -469,32 +471,117 @@ window.onload = () => {
     document.addEventListener("touchend", retry, { once: true, passive: true });
   }
 
+  function scheduleBgmRetry(delayMs) {
+    if (!bgm || bgmDelayedRetryId) return;
+    bgmDelayedRetryId = setTimeout(() => {
+      bgmDelayedRetryId = 0;
+      if (bgmShouldPlay && bgm.paused && !bgm.ended && !document.hidden) {
+        void startBgmPlayback();
+      }
+    }, delayMs);
+  }
+
   function startBgmPlayback() {
     if (!bgm) return Promise.resolve(false);
 
+    bgmShouldPlay = true;
     bgm.loop = true;
-    bgm.preload = "auto";
+    bgm.muted = false;
 
-    if (!bgm.paused) {
-      bgm.muted = false;
+    if (!bgm.paused && !bgm.ended) {
       smoothBgmVolume(BGM_BASE_VOLUME, 300);
       return Promise.resolve(true);
     }
 
-    bgm.muted = false;
-    bgm.volume = BGM_BASE_VOLUME;
-    const playAttempt = bgm.play();
+    if (bgmPlayPromise) return bgmPlayPromise;
 
-    if (!playAttempt || typeof playAttempt.then !== "function") {
+    if (bgm.ended) bgm.currentTime = 0;
+    bgm.volume = BGM_BASE_VOLUME;
+
+    let attempt;
+    try {
+      attempt = bgm.play();
+    } catch (err) {
+      attempt = Promise.reject(err);
+    }
+
+    if (!attempt || typeof attempt.then !== "function") {
       return Promise.resolve(true);
     }
 
-    return playAttempt.catch((err) => {
-      armBgmRetryOnNextInteraction();
-      console.log("Audio playback blocked by browser policies:", err);
-      return false;
-    });
+    const timeoutId = setTimeout(() => {
+      if (bgmShouldPlay && bgm.paused && !bgm.ended && bgmPlayPromise) {
+        bgmPlayPromise = null;
+        bgm.load();
+        scheduleBgmRetry(300);
+      }
+    }, BGM_PLAY_TIMEOUT_MS);
+
+    const settle = () => {
+      clearTimeout(timeoutId);
+      bgmPlayPromise = null;
+    };
+
+    bgmPlayPromise = attempt
+      .then(() => {
+        settle();
+        return true;
+      })
+      .catch((err) => {
+        settle();
+        if (err && err.name === "AbortError") {
+          // Superseded by a newer request or an internal interrupt — retry
+          // shortly instead of waiting for another user interaction.
+          scheduleBgmRetry(500);
+          return false;
+        }
+        armBgmRetryOnNextInteraction();
+        console.log("Audio playback blocked:", err);
+        return false;
+      });
+
+    return bgmPlayPromise;
   }
+
+  function setupBgmRecovery() {
+    if (!bgm) return;
+
+    const resumeIfNeeded = () => {
+      if (!bgmShouldPlay || document.hidden) return;
+      if (bgm.paused && !bgm.ended) {
+        if (bgm.error || bgm.readyState >= 2) {
+          void startBgmPlayback();
+        } else {
+          scheduleBgmRetry(600);
+        }
+      }
+    };
+
+    bgm.addEventListener("pause", () => {
+      if (bgmShouldPlay && !bgm.ended) setTimeout(resumeIfNeeded, 80);
+    });
+
+    bgm.addEventListener("ended", () => {
+      if (bgmShouldPlay) {
+        bgm.currentTime = 0;
+        void startBgmPlayback();
+      }
+    });
+
+    bgm.addEventListener("stalled", () => setTimeout(resumeIfNeeded, 300));
+    bgm.addEventListener("waiting", () => setTimeout(resumeIfNeeded, 400));
+    bgm.addEventListener("error", () => scheduleBgmRetry(600));
+
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden && bgmShouldPlay && bgm.paused && !bgm.ended) {
+        void startBgmPlayback();
+      }
+    });
+
+    setInterval(resumeIfNeeded, 3000);
+  }
+
+  setupBgmRecovery();
 
   startIntroCountdown = () => {
     if (introCountdownStarted) return;
