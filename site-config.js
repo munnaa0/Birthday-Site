@@ -223,7 +223,7 @@ export const siteConfig = {
     subtitle:
       "Make a wish and send it to your special someone. I will be cheering for every dream you whisper.",
     placeholder: "Type your wish here...", // textarea placeholder
-    buttonText: "Send to the Stars ✨", // button label
+    buttonText: "Send to special one ✨", // button label
     googleFormUrl:
       "https://docs.google.com/forms/d/e/1FAIpQLSfSCMkix8jCXjBOCu3lL_Gu1RrVDxQ0qUz0tJjsfhiNdC2Ezw/formResponse",
     googleFormField: "entry.149920223",
