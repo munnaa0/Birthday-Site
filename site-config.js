@@ -43,10 +43,7 @@ export const siteConfig = {
     greeting: "Dear Love,", // opening line
     paragraphs: [
       "I do not know how today feels for you, but for me it is a small miracle. The day you arrived turned ordinary time into a story I still reread.",
-      "I once imagined a neat little note with a list of reasons and favorite moments. Then I realized you do not fit in a list, and every attempt grew into a sky.",
-      "So I built this page as a thank you. I shaped it slowly, detail by detail, because you deserve care that is patient and deliberate.",
-      "Some days the energy faded, and I wondered if it would ever be enough. Still, I kept going, because making this is how I say I love you.",
-      "If you read this, I hope it feels like a quiet hug. If you do not, the effort still means something to me, and I am glad I tried.",
+
       "There are many more stories I could tell and many more gifts I want to give. This is only a small chapter, but it is written with all the tenderness I have.",
       "Happy birthday, my favorite person. May the year ahead be gentle, brave, and bright. I love you today, tomorrow, and every ordinary day in between.",
     ],
@@ -224,7 +221,7 @@ export const siteConfig = {
   wish: {
     title: "Whisper to the Universe", // section heading
     subtitle:
-      "Make a wish and send it to the stars. I will be cheering for every dream you whisper.",
+      "Make a wish and send it to your special someone. I will be cheering for every dream you whisper.",
     placeholder: "Type your wish here...", // textarea placeholder
     buttonText: "Send to the Stars ✨", // button label
     googleFormUrl:
