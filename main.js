@@ -293,6 +293,18 @@ function applyConfig() {
   if (faviconLink && siteConfig.meta.favicon) {
     faviconLink.href = siteConfig.meta.favicon;
   }
+  const metaDescription = document.querySelector('meta[name="description"]');
+  const ogTitle = document.querySelector('meta[property="og:title"]');
+  const ogDescription = document.querySelector('meta[property="og:description"]');
+  if (metaDescription && siteConfig.meta.description) {
+    metaDescription.content = siteConfig.meta.description;
+  }
+  if (ogTitle && siteConfig.meta.title) {
+    ogTitle.content = siteConfig.meta.title;
+  }
+  if (ogDescription && siteConfig.meta.description) {
+    ogDescription.content = siteConfig.meta.description;
+  }
 
   // data-config text elements
   document.querySelectorAll("[data-config]").forEach((el) => {
@@ -366,7 +378,7 @@ function applyConfig() {
 window.onload = () => {
   applyConfig();
 
-  const fallbackImageSrc = siteConfig.fallbacks.image || "images/pic1.jpg";
+  const fallbackImageSrc = siteConfig.fallbacks.image || "images/pic1.webp";
   document.addEventListener(
     "error",
     (event) => {
@@ -374,6 +386,13 @@ window.onload = () => {
       if (!target || target.tagName !== "IMG") return;
       if (target.dataset.fallbackApplied === "1") return;
       if (target.src && target.src.includes(fallbackImageSrc)) return;
+
+      // If a .webp fails to load, retry the same-name .jpg once first.
+      if (target.src && /\.webp(\?|$)/i.test(target.src) && !target.dataset.webpRetried) {
+        target.dataset.webpRetried = "1";
+        target.src = target.src.replace(/\.webp(\?.*)?$/i, ".jpg$1");
+        return;
+      }
 
       target.dataset.fallbackApplied = "1";
       target.src = fallbackImageSrc;
@@ -391,6 +410,7 @@ window.onload = () => {
   const birthdayText = document.getElementById("happy-birthday-text");
   const blowBtn = document.getElementById("blow-candle-btn");
   const bgm = document.getElementById("bgm");
+  const musicToggle = document.getElementById("music-toggle");
   const originalBirthdayText = birthdayText
     ? birthdayText.textContent.trim()
     : "";
@@ -398,14 +418,40 @@ window.onload = () => {
   const BGM_BASE_VOLUME = siteConfig.audio.bgmVolume ?? 0.5;
   let bgmVolumeTweenFrame = 0;
   let bgmRetryArmed = false;
+  const MUTE_STORAGE_KEY = "bd-bgm-muted";
+  let bgmMuted = false;
+  try {
+    bgmMuted = localStorage.getItem(MUTE_STORAGE_KEY) === "1";
+  } catch (err) {
+    // localStorage unavailable — fall back to unmuted
+  }
 
   if (bgm) {
     bgm.preload = "auto";
     // Preload early so playback can start immediately on candle click.
     bgm.load();
     bgm.loop = true;
-    bgm.muted = false;
-    bgm.volume = BGM_BASE_VOLUME;
+    bgm.muted = bgmMuted;
+    bgm.volume = bgmMuted ? 0 : BGM_BASE_VOLUME;
+  }
+
+  function updateMusicToggle() {
+    if (!musicToggle) return;
+    const muted = bgm ? bgm.muted : bgmMuted;
+    musicToggle.classList.toggle("muted", muted);
+    musicToggle.setAttribute("aria-pressed", String(muted));
+    musicToggle.setAttribute(
+      "aria-label",
+      muted ? "Unmute background music" : "Mute background music",
+    );
+    const icon = musicToggle.querySelector(".music-toggle-icon");
+    if (icon) icon.textContent = muted ? "🔇" : "🔊";
+  }
+
+  function showMusicToggle() {
+    if (!musicToggle) return;
+    musicToggle.hidden = false;
+    updateMusicToggle();
   }
 
   function smoothBgmVolume(targetVolume, durationMs = 320) {
@@ -474,28 +520,62 @@ window.onload = () => {
 
     bgm.loop = true;
     bgm.preload = "auto";
+    bgm.muted = bgmMuted;
+    showMusicToggle();
 
     if (!bgm.paused) {
-      bgm.muted = false;
-      smoothBgmVolume(BGM_BASE_VOLUME, 300);
+      smoothBgmVolume(bgmMuted ? 0 : BGM_BASE_VOLUME, 300);
       return Promise.resolve(true);
     }
 
-    bgm.muted = false;
-    bgm.volume = BGM_BASE_VOLUME;
+    bgm.volume = bgmMuted ? 0 : BGM_BASE_VOLUME;
     const playAttempt = bgm.play();
 
     if (!playAttempt || typeof playAttempt.then !== "function") {
       return Promise.resolve(true);
     }
 
-    return playAttempt.catch((err) => {
-      armBgmRetryOnNextInteraction();
-      console.log("Audio playback blocked by browser policies:", err);
-      return false;
+    return playAttempt
+      .then(() => {
+        showMusicToggle();
+        return true;
+      })
+      .catch((err) => {
+        armBgmRetryOnNextInteraction();
+        console.log("Audio playback blocked by browser policies:", err);
+        return false;
+      });
+  }
+
+  if (musicToggle) {
+    musicToggle.addEventListener("click", () => {
+      if (!bgm) return;
+      // The click is a user gesture — if audio was blocked earlier, retry it.
+      if (bgm.paused) {
+        void startBgmPlayback();
+      }
+      bgm.muted = !bgm.muted;
+      smoothBgmVolume(bgm.muted ? 0 : BGM_BASE_VOLUME, 280);
+      try {
+        localStorage.setItem(MUTE_STORAGE_KEY, bgm.muted ? "1" : "0");
+      } catch (err) {
+        // ignore storage failures
+      }
+      updateMusicToggle();
     });
   }
 
+  let introInterval = null;
+  function showCandlePrompt() {
+    instruction.style.opacity = "0";
+    instruction.style.maxHeight = "0";
+    instruction.style.marginBottom = "0";
+    countdownEl.style.opacity = "0";
+    countdownEl.style.maxHeight = "0";
+    countdownEl.style.marginBottom = "0";
+    candlePrompt.classList.add("visible");
+    blowBtn.classList.add("visible");
+  }
   startIntroCountdown = () => {
     if (introCountdownStarted) return;
     introCountdownStarted = true;
@@ -503,24 +583,39 @@ window.onload = () => {
     let count = 3;
     countdownEl.textContent = count;
 
-    const interval = setInterval(() => {
+    introInterval = setInterval(() => {
       count--;
       if (count > 0) {
         countdownEl.textContent = count;
       } else {
-        clearInterval(interval);
-        instruction.style.opacity = "0";
-        instruction.style.maxHeight = "0";
-        instruction.style.marginBottom = "0";
-        countdownEl.style.opacity = "0";
-        countdownEl.style.maxHeight = "0";
-        countdownEl.style.marginBottom = "0";
-        candlePrompt.classList.add("visible");
-        blowBtn.classList.add("visible");
+        clearInterval(introInterval);
+        showCandlePrompt();
       }
     }, 1000);
   };
   startIntroCountdown();
+
+  const skipIntroBtn = document.getElementById("skip-intro-btn");
+  const VISITED_STORAGE_KEY = "bd-visited";
+  let visitedBefore = false;
+  try {
+    visitedBefore = localStorage.getItem(VISITED_STORAGE_KEY) === "1";
+  } catch (err) {
+    // localStorage unavailable — always show the countdown
+  }
+  if (skipIntroBtn && visitedBefore) skipIntroBtn.hidden = false;
+  if (skipIntroBtn) {
+    skipIntroBtn.addEventListener("click", () => {
+      clearInterval(introInterval);
+      showCandlePrompt();
+      skipIntroBtn.hidden = true;
+      try {
+        localStorage.setItem(VISITED_STORAGE_KEY, "1");
+      } catch (err) {
+        // ignore storage failures
+      }
+    });
+  }
 
   const mobileBirthdayMedia = window.matchMedia("(max-width: 430px)");
 
@@ -559,6 +654,11 @@ window.onload = () => {
   function triggerBlowSequence() {
     // Keep this as the first action to preserve user-activation context.
     void startBgmPlayback();
+    try {
+      localStorage.setItem(VISITED_STORAGE_KEY, "1");
+    } catch (err) {
+      // ignore storage failures
+    }
 
     app.startCosmicMotion();
 
@@ -1091,6 +1191,14 @@ window.onload = () => {
     );
 
     storyItems.forEach((item) => entranceObserver.observe(item));
+    function syncStoryCardAria(card) {
+      const back = card.querySelector(".story-card-back");
+      const front = card.querySelector(".story-card-front");
+      const flipped = card.classList.contains("flipped");
+      if (back) back.setAttribute("aria-hidden", String(!flipped));
+      if (front) front.setAttribute("aria-hidden", String(flipped));
+    }
+
     let lastStorySparkle = 0;
     storyCards.forEach((card) => {
       const inner = card.querySelector(".story-card-inner");
@@ -1116,11 +1224,13 @@ window.onload = () => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           card.classList.toggle("flipped");
+          syncStoryCardAria(card);
         }
       });
       card.addEventListener("click", () => {
         if (window.matchMedia("(hover: none)").matches) {
           card.classList.toggle("flipped");
+          syncStoryCardAria(card);
         }
       });
     });
@@ -1311,6 +1421,10 @@ window.onload = () => {
     const lbImage = document.getElementById("gallery-lb-image");
     const lbTitle = document.getElementById("gallery-lb-title");
     const lbText = document.getElementById("gallery-lb-text");
+    const lbPrevBtn = document.getElementById("gallery-lb-prev");
+    const lbNextBtn = document.getElementById("gallery-lb-next");
+    const lbCloseBtn = document.getElementById("gallery-lb-close");
+    const lbCount = document.getElementById("gallery-lb-count");
 
     if (!lightbox || !panel || !lbImage || !lbTitle || !lbText) {
       return;
@@ -1375,6 +1489,7 @@ window.onload = () => {
       lbImage.alt = current.alt;
       lbTitle.textContent = current.title;
       lbText.textContent = current.text;
+      if (lbCount) lbCount.textContent = activeIndex + 1 + " / " + items.length;
 
       preloadNeighbors(activeIndex);
 
@@ -1508,6 +1623,10 @@ window.onload = () => {
       }
     });
 
+    lbPrevBtn?.addEventListener("click", () => updateLightbox(activeIndex - 1));
+    lbNextBtn?.addEventListener("click", () => updateLightbox(activeIndex + 1));
+    lbCloseBtn?.addEventListener("click", closeLightbox);
+
     backdrop?.addEventListener("click", closeLightbox);
     panel.addEventListener("click", (e) => {
       if (
@@ -1556,12 +1675,17 @@ window.onload = () => {
   const wishBtn = document.getElementById("wish-btn");
   const wishInputContainer = document.querySelector(".wish-container");
   const wishInput = document.getElementById("wish-input");
+  const wishStatus = document.getElementById("wish-status");
   const finaleSection = document.getElementById("section-finale");
 
   const GOOGLE_FORM_ACTION_URL = siteConfig.wish.googleFormUrl || "";
   const GOOGLE_FORM_WISH_FIELD = siteConfig.wish.googleFormField || "";
 
   function submitWishToGoogleForm(message) {
+    if (!GOOGLE_FORM_ACTION_URL || !GOOGLE_FORM_WISH_FIELD) {
+      return Promise.resolve(false);
+    }
+
     const formData = new URLSearchParams();
     formData.append(GOOGLE_FORM_WISH_FIELD, message);
     formData.append("fvv", "1");
@@ -1574,7 +1698,19 @@ window.onload = () => {
         "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
       },
       body: formData,
-    }).catch(() => null);
+    })
+      .then(() => true)
+      .catch(() => false);
+  }
+
+  function saveWishLocally(message) {
+    try {
+      const saved = JSON.parse(localStorage.getItem("bd-wishes") || "[]");
+      saved.push({ text: message, at: new Date().toISOString() });
+      localStorage.setItem("bd-wishes", JSON.stringify(saved.slice(-50)));
+    } catch (err) {
+      // localStorage unavailable — the wish still goes to the form when reachable
+    }
   }
 
   const isMobileWishDevice = window.matchMedia(
@@ -1756,6 +1892,54 @@ window.onload = () => {
     setTimeout(() => primeBurstPool(), 0);
   }
 
+  function launchFinaleConfetti() {
+    const container = document.getElementById("finale-confetti");
+    if (!container || container.dataset.launched) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+    container.dataset.launched = "1";
+
+    const colors = [
+      "#d4af37",
+      "#ffd1dc",
+      "#fff2cc",
+      "#b76e79",
+      "#f0d68a",
+      "#c8a0e0",
+      "#ffffff",
+    ];
+    const count = 150;
+    const fragment = document.createDocumentFragment();
+
+    for (let i = 0; i < count; i++) {
+      const piece = document.createElement("i");
+      piece.className = "confetti-piece";
+      piece.style.width = 6 + Math.random() * 8 + "px";
+      piece.style.height = 10 + Math.random() * 10 + "px";
+      piece.style.left = Math.random() * 100 + "vw";
+      piece.style.background =
+        colors[Math.floor(Math.random() * colors.length)];
+      piece.style.borderRadius = Math.random() > 0.5 ? "50%" : "2px";
+      piece.style.setProperty(
+        "--fall",
+        2.4 + Math.random() * 2.6 + "s",
+      );
+      piece.style.setProperty("--delay", Math.random() * 1.4 + "s");
+      piece.style.setProperty(
+        "--sway",
+        ((Math.random() * 2 - 1) * 90).toFixed(1) + "px",
+      );
+      piece.style.setProperty(
+        "--spin",
+        (Math.random() * 720).toFixed(0) + "deg",
+      );
+      fragment.appendChild(piece);
+    }
+
+    container.appendChild(fragment);
+  }
+
   if (wishBtn && wishInputContainer) {
     let wishSent = false;
 
@@ -1769,7 +1953,14 @@ window.onload = () => {
       if (wishSent) return;
       wishSent = true;
 
-      void submitWishToGoogleForm(wishMessage);
+      saveWishLocally(wishMessage);
+      submitWishToGoogleForm(wishMessage).then((ok) => {
+        if (!ok && wishStatus) {
+          wishStatus.hidden = false;
+          wishStatus.textContent =
+            "The stars are just out of reach right now, but your wish is safe with me ✨";
+        }
+      });
 
       wishInputContainer.classList.add("sent");
       const wishHeader = document.querySelector(".wish-header");
@@ -1793,11 +1984,19 @@ window.onload = () => {
           finaleSection.style.display = "flex";
           setTimeout(() => {
             finaleSection.classList.add("active");
+            launchFinaleConfetti();
             const footer = finaleSection.querySelector(".story-footer");
             if (footer) footer.setAttribute("aria-hidden", "false");
           }, 50);
         }, 1200);
       }
+    });
+  }
+
+  const replayBtn = document.getElementById("replay-btn");
+  if (replayBtn) {
+    replayBtn.addEventListener("click", () => {
+      window.location.reload();
     });
   }
 };

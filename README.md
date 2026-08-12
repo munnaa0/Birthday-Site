@@ -81,41 +81,52 @@ http://localhost:5173
 
 ## Customization Guide
 
+> Almost everything a visitor sees is configured in **`site-config.js`** — you rarely need to touch markup or logic.
+
 ### Update the Names and Text
 
-- Main text lives in `index.html` (headings, letter content, story card copy).
+- Open `site-config.js` and edit `meta`, `intro`, `gift`, `letter`, `countdown`, `story`, `gallery`, `wish`, `finale`, and `constellation` blocks.
+- Headings, letter paragraphs, story cards, gallery captions, and the wish form URL all come from this single file.
 
 ### Change the Gallery
 
-Edit the `items` array inside `initGallery()` in `main.js`:
+Edit the `items` array inside `gallery` in `site-config.js`:
 
-- `src`: image path
-- `alt`: accessibility text
+- `src`: image path (WebP preferred; add the matching `.jpg` as a fallback)
 - `title` and `text`: caption content
 - `r`, `x`, `y`: rotation and layout offset
 
 ### Adjust the Countdown Date
 
-In `main.js`, update:
+In `site-config.js`, update:
 
 ```
-const startDate = new Date(2018, 0, 24, 0, 0, 0);
+countdown: { startDate: "2018-01-24T00:00:00" }
 ```
 
 ### Replace the Wish Form
 
-In `main.js`, update these constants:
+In `site-config.js`, update these fields:
 
 ```
-const GOOGLE_FORM_ACTION_URL = "...";
-const GOOGLE_FORM_WISH_FIELD = "entry.XXXX";
+wish: {
+  googleFormUrl: "...",
+  googleFormField: "entry.XXXX",
+}
 ```
+
+Wishes are also saved to the visitor's `localStorage` as a backup, and a friendly offline note is shown if the form cannot be reached.
 
 ### Swap Music and Images
 
 - Replace `bgm.mp3` in the project root.
-- Replace images under `images/`.
-- The global fallback image is `images/pic1.jpg`.
+- Replace images under `images/` with WebP versions. A lightweight `pic1.jpg` is kept for social-share previews (OG image) and as the JPG fallback twin; if any `.webp` fails to load, `main.js` retries the same-name `.jpg` and falls back to `images/pic1.webp`.
+
+### Extras for Returning Visitors
+
+- A **Skip the countdown** button appears on repeat visits (tracked in `localStorage`).
+- A floating **music toggle** appears once the BGM starts; the preference is remembered.
+- A **↺ Relive the journey** button at the finale reloads the experience.
 
 ### Tweak the Cosmos
 

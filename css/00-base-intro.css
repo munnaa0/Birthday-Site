@@ -45,7 +45,7 @@ html {
   justify-content: center;
   transition: opacity 1.5s ease-in-out;
   color: #fff;
-  font-family: "Comic Sans MS", cursive, sans-serif;
+  font-family: "Lora", Georgia, serif;
 }
 
 #intro-overlay::before {
@@ -165,9 +165,9 @@ html {
 }
 
 #candle-prompt {
-  font-size: 2.2rem;
-  font-family: "Comic Sans MS", cursive, sans-serif;
-  font-weight: bold;
+  font-size: 2rem;
+  font-family: "Lora", Georgia, serif;
+  font-weight: 600;
   color: #ff4d94;
   text-shadow:
     0 0 8px #ff99cc,
@@ -179,7 +179,7 @@ html {
     opacity 0.8s ease,
     transform 0.8s ease;
   animation: none;
-  letter-spacing: 3px;
+  letter-spacing: 2px;
 }
 
 #candle-prompt.visible {
@@ -212,10 +212,11 @@ html {
 #blow-candle-btn {
   display: none;
   margin-bottom: 30px;
-  padding: 16px 40px;
-  font-size: 1.6rem;
-  font-family: "Comic Sans MS", cursive, sans-serif;
-  font-weight: bold;
+  padding: 16px 42px;
+  font-size: 1.25rem;
+  font-family: "Lora", Georgia, serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
   color: #fff;
   background: linear-gradient(135deg, #ff6b9d, #ff4757);
   border: none;
@@ -341,4 +342,98 @@ html {
     width: 100%;
     height: 100dvh;
   }
+}
+
+/* ── Floating music toggle ─────────────────────────────── */
+.music-toggle {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 120;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 242, 204, 0.35);
+  background: rgba(20, 10, 35, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: #fff2cc;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.45),
+    0 0 18px rgba(212, 175, 55, 0.18);
+  transition:
+    transform 0.25s cubic-bezier(0.2, 0.6, 0.2, 1),
+    box-shadow 0.25s ease,
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+.music-toggle[hidden] {
+  display: none;
+}
+
+.music-toggle:hover {
+  transform: scale(1.1) translateY(-2px);
+  background: rgba(34, 16, 56, 0.72);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.5),
+    0 0 26px rgba(212, 175, 55, 0.32);
+}
+
+.music-toggle:active {
+  transform: scale(0.94);
+}
+
+.music-toggle.muted {
+  color: rgba(255, 242, 204, 0.5);
+  border-color: rgba(255, 242, 204, 0.18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .music-toggle {
+    transition: none;
+  }
+}
+
+/* ── Skip intro (returning visitors) ───────────────────── */
+.skip-intro-btn {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 242, 204, 0.3);
+  color: rgba(255, 242, 204, 0.85);
+  font-family: "Lora", Georgia, serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.4px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease,
+    color 0.25s ease;
+}
+
+.skip-intro-btn[hidden] {
+  display: none;
+}
+
+.skip-intro-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.skip-intro-btn:active {
+  transform: translateY(0) scale(0.97);
 }

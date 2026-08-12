@@ -764,3 +764,125 @@
     background-size: 4px 12px;
   }
 }
+
+/* ── Wish offline note ─────────────────────────────────── */
+.wish-status {
+  font-family: "Lora", Georgia, serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: rgba(255, 225, 235, 0.85);
+  text-align: center;
+  margin: 18px auto 0;
+  max-width: 420px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  animation: wishStatusIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.wish-status[hidden] {
+  display: none;
+}
+
+@keyframes wishStatusIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Finale confetti ───────────────────────────────────── */
+#finale-confetti {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -5vh;
+  display: block;
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: confettiFall var(--fall, 3s) var(--delay, 0s)
+    cubic-bezier(0.3, 0.2, 0.6, 1) forwards;
+}
+
+@keyframes confettiFall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -5vh, 0) rotate(0deg);
+  }
+  8% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--sway, 0px), 108vh, 0)
+      rotate(var(--spin, 360deg));
+  }
+}
+
+/* ── Replay journey button ─────────────────────────────── */
+.replay-btn {
+  margin-top: 2.4rem;
+  padding: 12px 30px;
+  font-family: "Lora", Georgia, serif;
+  font-size: 1rem;
+  letter-spacing: 0.6px;
+  color: #fff2cc;
+  background: rgba(20, 10, 35, 0.55);
+  border: 1px solid rgba(212, 175, 55, 0.55);
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.45),
+    0 0 20px rgba(212, 175, 55, 0.2);
+  opacity: 0;
+  transform: translateY(14px);
+  pointer-events: none;
+  transition:
+    opacity 1.6s ease,
+    transform 1.6s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.replay-btn:hover {
+  background: rgba(40, 22, 66, 0.75);
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(212, 175, 55, 0.35);
+  transform: translateY(-2px);
+}
+
+.replay-btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.finale-section.active .replay-btn {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition-delay: 8.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confetti-piece {
+    animation: none;
+    display: none;
+  }
+  .finale-section.active .replay-btn {
+    transition: none;
+  }
+}
