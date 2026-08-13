@@ -30,24 +30,28 @@
   </head>
   <body>
     <audio id="bgm" data-config-src="audio.bgmSrc" loop></audio>
-    <button
-      id="music-toggle"
-      class="music-toggle"
-      aria-label="Mute background music"
-      aria-pressed="false"
-      hidden
-    >
-      <span class="music-toggle-icon" aria-hidden="true">🔊</span>
-    </button>
     <div id="intro-overlay">
       <button
         id="skip-intro-btn"
         class="skip-intro-btn"
         aria-label="Skip the candle countdown"
-        data-config="intro.skipButtonText"
         hidden
       >
-        Skip the countdown ⏭
+        <svg
+          class="skip-intro-icon"
+          viewBox="0 0 24 24"
+          width="15"
+          height="15"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"
+          />
+        </svg>
+        <span class="skip-intro-label" data-config="intro.skipButtonText"
+          >Skip the countdown</span
+        >
       </button>
       <h1 id="intro-instruction" data-config="intro.instruction"></h1>
       <div id="countdown">3</div>
@@ -600,13 +604,25 @@
               </div>
               <p class="story-footer-text" data-config="finale.footerText"></p>
             </div>
-            <button
-              id="replay-btn"
-              class="replay-btn"
-              type="button"
-              data-config="finale.replayButtonText"
-            >
-              ↺ Relive the journey
+            <button id="replay-btn" class="replay-btn" type="button">
+              <svg
+                class="replay-icon"
+                viewBox="0 0 24 24"
+                width="17"
+                height="17"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <polyline points="1 4 1 10 7 10"></polyline>
+                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+              </svg>
+              <span class="replay-label" data-config="finale.replayButtonText"
+                >Relive the journey</span
+              >
             </button>
           </div>
         </div>

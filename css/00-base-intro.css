@@ -344,96 +344,86 @@ html {
   }
 }
 
-/* ── Floating music toggle ─────────────────────────────── */
-.music-toggle {
-  position: fixed;
-  right: 22px;
-  bottom: 22px;
-  z-index: 120;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 242, 204, 0.35);
-  background: rgba(20, 10, 35, 0.55);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  color: #fff2cc;
-  font-size: 1.3rem;
-  line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.45),
-    0 0 18px rgba(212, 175, 55, 0.18);
-  transition:
-    transform 0.25s cubic-bezier(0.2, 0.6, 0.2, 1),
-    box-shadow 0.25s ease,
-    background 0.25s ease,
-    color 0.25s ease;
-}
-
-.music-toggle[hidden] {
-  display: none;
-}
-
-.music-toggle:hover {
-  transform: scale(1.1) translateY(-2px);
-  background: rgba(34, 16, 56, 0.72);
-  box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.5),
-    0 0 26px rgba(212, 175, 55, 0.32);
-}
-
-.music-toggle:active {
-  transform: scale(0.94);
-}
-
-.music-toggle.muted {
-  color: rgba(255, 242, 204, 0.5);
-  border-color: rgba(255, 242, 204, 0.18);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .music-toggle {
-    transition: none;
-  }
-}
-
 /* ── Skip intro (returning visitors) ───────────────────── */
 .skip-intro-btn {
   position: absolute;
   top: 18px;
   right: 18px;
   z-index: 10;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 242, 204, 0.3);
-  color: rgba(255, 242, 204, 0.85);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.14),
+    rgba(255, 255, 255, 0.04)
+  );
+  color: rgba(255, 242, 204, 0.92);
   font-family: "Lora", Georgia, serif;
   font-size: 0.85rem;
-  letter-spacing: 0.4px;
-  padding: 8px 16px;
-  border-radius: 999px;
+  letter-spacing: 0.5px;
   cursor: pointer;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.08);
   transition:
     background 0.25s ease,
-    transform 0.25s ease,
-    color 0.25s ease;
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease;
 }
 
 .skip-intro-btn[hidden] {
   display: none;
 }
 
+.skip-intro-icon {
+  color: #ffd700;
+  filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.7));
+  transition: transform 0.3s ease;
+}
+
 .skip-intro-btn:hover {
-  background: rgba(255, 255, 255, 0.16);
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.24),
+    rgba(255, 255, 255, 0.08)
+  );
+  border-color: rgba(212, 175, 55, 0.85);
   color: #fff;
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(212, 175, 55, 0.3);
   transform: translateY(-1px);
+}
+
+.skip-intro-btn:hover .skip-intro-icon {
+  transform: rotate(90deg);
 }
 
 .skip-intro-btn:active {
   transform: translateY(0) scale(0.97);
+}
+
+.skip-intro-btn:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(212, 175, 55, 0.4),
+    0 8px 22px rgba(0, 0, 0, 0.4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-intro-btn,
+  .skip-intro-btn * {
+    transition: none;
+  }
+  .skip-intro-btn:hover .skip-intro-icon {
+    transform: none;
+  }
 }

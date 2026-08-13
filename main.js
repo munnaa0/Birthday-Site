@@ -410,7 +410,6 @@ window.onload = () => {
   const birthdayText = document.getElementById("happy-birthday-text");
   const blowBtn = document.getElementById("blow-candle-btn");
   const bgm = document.getElementById("bgm");
-  const musicToggle = document.getElementById("music-toggle");
   const originalBirthdayText = birthdayText
     ? birthdayText.textContent.trim()
     : "";
@@ -418,40 +417,13 @@ window.onload = () => {
   const BGM_BASE_VOLUME = siteConfig.audio.bgmVolume ?? 0.5;
   let bgmVolumeTweenFrame = 0;
   let bgmRetryArmed = false;
-  const MUTE_STORAGE_KEY = "bd-bgm-muted";
-  let bgmMuted = false;
-  try {
-    bgmMuted = localStorage.getItem(MUTE_STORAGE_KEY) === "1";
-  } catch (err) {
-    // localStorage unavailable — fall back to unmuted
-  }
 
   if (bgm) {
     bgm.preload = "auto";
     // Preload early so playback can start immediately on candle click.
     bgm.load();
     bgm.loop = true;
-    bgm.muted = bgmMuted;
-    bgm.volume = bgmMuted ? 0 : BGM_BASE_VOLUME;
-  }
-
-  function updateMusicToggle() {
-    if (!musicToggle) return;
-    const muted = bgm ? bgm.muted : bgmMuted;
-    musicToggle.classList.toggle("muted", muted);
-    musicToggle.setAttribute("aria-pressed", String(muted));
-    musicToggle.setAttribute(
-      "aria-label",
-      muted ? "Unmute background music" : "Mute background music",
-    );
-    const icon = musicToggle.querySelector(".music-toggle-icon");
-    if (icon) icon.textContent = muted ? "🔇" : "🔊";
-  }
-
-  function showMusicToggle() {
-    if (!musicToggle) return;
-    musicToggle.hidden = false;
-    updateMusicToggle();
+    bgm.volume = BGM_BASE_VOLUME;
   }
 
   function smoothBgmVolume(targetVolume, durationMs = 320) {
@@ -520,15 +492,13 @@ window.onload = () => {
 
     bgm.loop = true;
     bgm.preload = "auto";
-    bgm.muted = bgmMuted;
-    showMusicToggle();
 
     if (!bgm.paused) {
-      smoothBgmVolume(bgmMuted ? 0 : BGM_BASE_VOLUME, 300);
+      smoothBgmVolume(BGM_BASE_VOLUME, 300);
       return Promise.resolve(true);
     }
 
-    bgm.volume = bgmMuted ? 0 : BGM_BASE_VOLUME;
+    bgm.volume = BGM_BASE_VOLUME;
     const playAttempt = bgm.play();
 
     if (!playAttempt || typeof playAttempt.then !== "function") {
@@ -536,33 +506,12 @@ window.onload = () => {
     }
 
     return playAttempt
-      .then(() => {
-        showMusicToggle();
-        return true;
-      })
+      .then(() => true)
       .catch((err) => {
         armBgmRetryOnNextInteraction();
         console.log("Audio playback blocked by browser policies:", err);
         return false;
       });
-  }
-
-  if (musicToggle) {
-    musicToggle.addEventListener("click", () => {
-      if (!bgm) return;
-      // The click is a user gesture — if audio was blocked earlier, retry it.
-      if (bgm.paused) {
-        void startBgmPlayback();
-      }
-      bgm.muted = !bgm.muted;
-      smoothBgmVolume(bgm.muted ? 0 : BGM_BASE_VOLUME, 280);
-      try {
-        localStorage.setItem(MUTE_STORAGE_KEY, bgm.muted ? "1" : "0");
-      } catch (err) {
-        // ignore storage failures
-      }
-      updateMusicToggle();
-    });
   }
 
   let introInterval = null;

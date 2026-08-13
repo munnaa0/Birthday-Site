@@ -125,8 +125,7 @@ Wishes are also saved to the visitor's `localStorage` as a backup, and a friendl
 ### Extras for Returning Visitors
 
 - A **Skip the countdown** button appears on repeat visits (tracked in `localStorage`).
-- A floating **music toggle** appears once the BGM starts; the preference is remembered.
-- A **↺ Relive the journey** button at the finale reloads the experience.
+- A **Relive the journey** button at the finale reloads the experience.
 
 ### Tweak the Cosmos
 

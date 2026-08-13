@@ -833,41 +833,93 @@
 
 /* ── Replay journey button ─────────────────────────────── */
 .replay-btn {
+  position: relative;
   margin-top: 2.4rem;
-  padding: 12px 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 36px;
   font-family: "Lora", Georgia, serif;
-  font-size: 1rem;
-  letter-spacing: 0.6px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.8px;
   color: #fff2cc;
-  background: rgba(20, 10, 35, 0.55);
-  border: 1px solid rgba(212, 175, 55, 0.55);
+  background: rgba(20, 10, 35, 0.45);
+  border: 1px solid rgba(212, 175, 55, 0.6);
   border-radius: 999px;
   cursor: pointer;
+  overflow: hidden;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   box-shadow:
     0 10px 26px rgba(0, 0, 0, 0.45),
-    0 0 20px rgba(212, 175, 55, 0.2);
+    0 0 20px rgba(212, 175, 55, 0.22),
+    inset 0 1px 1px rgba(255, 255, 255, 0.12);
   opacity: 0;
   transform: translateY(14px);
   pointer-events: none;
   transition:
     opacity 1.6s ease,
     transform 1.6s ease,
-    background 0.25s ease,
-    box-shadow 0.25s ease;
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    color 0.25s ease;
+}
+
+.replay-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.75),
+    rgba(183, 110, 121, 0.55)
+  );
+  opacity: 0.18;
+  transition: opacity 0.25s ease;
+}
+
+.replay-icon {
+  position: relative;
+  z-index: 1;
+  color: #ffd700;
+  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.8));
+  transition: transform 0.35s ease;
+}
+
+.replay-label {
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .replay-btn:hover {
-  background: rgba(40, 22, 66, 0.75);
+  color: #fff;
+  border-color: rgba(212, 175, 55, 0.95);
   box-shadow:
-    0 14px 32px rgba(0, 0, 0, 0.5),
-    0 0 30px rgba(212, 175, 55, 0.35);
+    0 14px 34px rgba(0, 0, 0, 0.5),
+    0 0 34px rgba(212, 175, 55, 0.45);
   transform: translateY(-2px);
+}
+
+.replay-btn:hover::before {
+  opacity: 0.34;
+}
+
+.replay-btn:hover .replay-icon {
+  transform: rotate(-180deg);
 }
 
 .replay-btn:active {
   transform: translateY(0) scale(0.97);
+}
+
+.replay-btn:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(212, 175, 55, 0.45),
+    0 14px 34px rgba(0, 0, 0, 0.5);
 }
 
 .finale-section.active .replay-btn {
@@ -884,5 +936,8 @@
   }
   .finale-section.active .replay-btn {
     transition: none;
+  }
+  .replay-btn:hover .replay-icon {
+    transform: none;
   }
 }

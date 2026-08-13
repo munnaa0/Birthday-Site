@@ -25,7 +25,7 @@ export const siteConfig = {
     candlePrompt: "✨ Make a Wish! ✨", // prompt text
     blowButtonText: "🎂 Blow the Candle!", // button label
     birthdayText: "Happy Birthday Tangerine!", // big heading after blow
-    skipButtonText: "Skip the countdown ⏭", // label for returning-visitor skip button
+    skipButtonText: "Skip the countdown", // label for returning-visitor skip button
   },
 
   // ── Gift ──────────────────────────────────
@@ -239,7 +239,7 @@ export const siteConfig = {
     line3: "is you",
     title: "Happy Birthday, Tangerine",
     footerText: "Made with all my heart, just for you",
-    replayButtonText: "↺ Relive the journey", // label on the finale replay button
+    replayButtonText: "Relive the journey", // label on the finale replay button
   },
 
   // ── Constellation (star text after blow) ──
